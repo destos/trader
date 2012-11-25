@@ -1,3 +1,6 @@
 node_modules
 npm-debug.log
 client/dist/
+client/vendor/jam
+!client/vendor/jam/require.config.js
+!client/vendor/jam/require.js
