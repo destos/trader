@@ -42,11 +42,9 @@ auth = (req, res, next) ->
     next()
 
 mongoose = require('mongoose');
-db = mongoose.createConnection('localhost', 'trader')
 
-Location = db.model 'Location', mongoose.Schema
-  hint: 'string'
-  address: 'string'
+db = mongoose.createConnection('localhost', 'trader')
+Location = require('./models/location')(db)
 
 locations = backboneio.createBackend()
 # locations.use backboneio.middleware.cookieParser()

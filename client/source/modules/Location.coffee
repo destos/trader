@@ -13,14 +13,13 @@ define ["app"], (app) ->
     # backend: 'locations'
     
     defaults:
-      location:
-        lat: 50.0
-        lng: 50.0
+      location: [0, 0]
       hint: 'Inside the store, around on the right side of the entrance.'
       address: '1234 Some road City, State 12345'
       items: []
       prev_items: []
       type: []
+      active: false
     
     initialize: (options) ->
     
