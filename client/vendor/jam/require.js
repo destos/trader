@@ -2053,6 +2053,11 @@ var jam = {
             "main": "backbone.layoutmanager.js"
         },
         {
+            "name": "Backbone.Mutators",
+            "location": "../vendor/jam/Backbone.Mutators",
+            "main": "backbone.mutators.js"
+        },
+        {
             "name": "handlebars",
             "location": "../vendor/jam/handlebars",
             "main": "handlebars.js"
