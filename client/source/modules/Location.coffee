@@ -11,6 +11,7 @@ define ["app"], (app) ->
   Location.Model = Backbone.Model.extend
     
     # backend: 'locations'
+    idAttribute: '_id'
     
     defaults:
       location: [0, 0]

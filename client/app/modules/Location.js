@@ -3,16 +3,15 @@ define(["app"], function(app) {
   var Location;
   Location = app.module();
   Location.Model = Backbone.Model.extend({
+    idAttribute: '_id',
     defaults: {
-      location: {
-        lat: 50.0,
-        lng: 50.0
-      },
+      location: [0, 0],
       hint: 'Inside the store, around on the right side of the entrance.',
       address: '1234 Some road City, State 12345',
       items: [],
       prev_items: [],
-      type: []
+      type: [],
+      active: false
     },
     initialize: function(options) {},
     itemCount: function() {

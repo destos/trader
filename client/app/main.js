@@ -1,6 +1,5 @@
 
 define(["app", "router"], function(app, Router) {
-  console.log('main started');
   app.router = new Router();
   Backbone.history.start({
     pushState: true,
