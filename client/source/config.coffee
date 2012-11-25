@@ -7,8 +7,8 @@ require.config
   
   # Put paths here.
   paths: {
-    "socket.io": "../socket.io/socket.io"
-    "backbone.io": "../socket.io/backbone.io"
+    "socket.io": "/socket.io/socket.io"
+    "backbone.io": "/socket.io/backbone.io"
   }
   
   # Put shims here.

@@ -1,8 +1,6 @@
-
-# Application.
-
-# Main Router.
-require ["app", "router"], (app, Router) ->
+define ["app", "router"], (app, Router) ->
+  
+  console.log 'main started'
   
   # Define your master router on the application namespace and trigger all
   # navigation from this instance.

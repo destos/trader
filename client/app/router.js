@@ -1,15 +1,26 @@
 
-define(["app", "backbone.io"], function(app, Backbone) {
+define(["app", "backbone.io", "modules/Location"], function(app, Backbone, Location) {
   var Router;
   Router = Backbone.Router.extend({
     routes: {
       "": "index"
     },
     initialize: function() {
-      return Backbone.io.connect();
+      Backbone.io.connect();
+      return app.locations = new Location.Collection();
     },
     index: function() {
-      return console.log('got here');
+      var locationGrid;
+      locationGrid = new Location.Views.Grid({
+        collection: app.locations
+      });
+      app.useLayout({
+        template: 'home'
+      });
+      app.layout.setViews({
+        '.grid': locationGrid
+      });
+      return app.locations.fetch();
     }
   });
   return Router;

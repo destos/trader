@@ -3,7 +3,13 @@
 // https://github.com/cowboy/grunt/blob/master/docs/configuring.md
 module.exports = function(grunt) {
   
-  grunt.loadNpmTasks('grunt-coffee')
+  grunt.loadNpmTasks('grunt-contrib-handlebars');
+  grunt.loadNpmTasks('grunt-coffee');
+  
+  grunt.registerHelper('getTemplatePath', function (fullFilePath) {
+    var fileName = fullFilePath.substring(fullFilePath.lastIndexOf('templates/') + 10);
+    return fileName.substring(0, fileName.indexOf('.'));
+  });
   
   grunt.initConfig({
       
@@ -38,20 +44,27 @@ module.exports = function(grunt) {
         scripturl: true
       }
     },
-
-    // The jst task compiles all application templates into JavaScript
-    // functions with the underscore.js template function from 1.2.4.  You can
-    // change the namespace and the template options, by reading this:
-    // https://github.com/gruntjs/grunt-contrib/blob/master/docs/jst.md
-    //
-    // The concat task depends on this file to exist, so if you decide to
-    // remove this, ensure concat is updated accordingly.
-    jst: {
-      "dist/debug/templates.js": [
-        "app/templates/**/*.html"
-      ]
+    
+    // The handlebars task compiles all application templates into JavaScript
+    // functions using Handlebars templating engine.
+    handlebars: {
+      compile: {
+        options: {
+          namespace: 'JST',
+          processName : function (filePath) {
+              return grunt.helper("getTemplatePath", filePath);
+          },
+          // processPartialName : function (filePath) { // input: templates/_header.handlebar
+          //     return grunt.helper("getSimpleFileName", filePath);
+          // },
+          // partialRegex : /\.template_partial$/
+        },
+        files : {
+          "dist/debug/templates.js" : 'app/templates/**/*.hbs'
+        }
+      }
     },
-
+    
     // This task simplifies working with CSS inside Backbone Boilerplate
     // projects.  Instead of manually specifying your stylesheets inside the
     // configuration, you can use `@imports` and this task will concatenate
@@ -90,7 +103,14 @@ module.exports = function(grunt) {
       name: "config",
 
       // Do not wrap everything in an IIFE.
-      wrap: false
+      wrap: false,
+      
+      // TODO: fix this, when everything is concatonated this may be causing the app not to load. Unknown
+      // Always load socket.io and backbone.io from the express server
+      paths: {
+        'socket.io': 'empty:',
+        'backbone.io': 'empty:'
+      }
     },
 
     // The concatenate task is used here to merge the almond require/define
@@ -289,11 +309,11 @@ module.exports = function(grunt) {
   // dist/debug/templates.js, compile all the application code into
   // dist/debug/require.js, and then concatenate the require/define shim
   // almond.js and dist/debug/templates.js into the require.js file.
-  grunt.registerTask("debug", "clean lint jst requirejs concat styles");
+  grunt.registerTask("debug", "clean coffee lint handlebars requirejs concat styles targethtml:debug");
   // -stylus:compile
 
   // The release task will run the debug tasks and then minify the
   // dist/debug/require.js file and CSS files.
-  grunt.registerTask("release", "debug min mincss");
+  grunt.registerTask("release", "debug min mincss targethtml:release");
 
 };

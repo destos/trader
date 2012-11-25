@@ -10,6 +10,9 @@
   "license": "BSD",
   "dependencies": {
     "backbone.io": "~0.3.2",
-    "express": "~3.0.3"
+    "express": "~3.0.3",
+    "mongoose": "~3.4.0",
+    "session-mongoose": "~0.2.0",
+    "eyes": "~0.1.8"
   }
 }

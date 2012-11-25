@@ -1,4 +1,7 @@
-define ["backbone.layoutmanager"], ->
+define [
+  "handlebars"
+  "backbone.layoutmanager"
+], (Handlebars) ->
   
   # Provide a global location to place configuration settings and module
   # creation.
@@ -17,9 +20,6 @@ define ["backbone.layoutmanager"], ->
     prefix: "app/templates/"
     fetch: (path) ->
       
-      # Concatenate the file extension.
-      path = path + ".html"
-      
       # If cached, use the compiled template.
       return JST[path]  if JST[path]
       
@@ -27,10 +27,17 @@ define ["backbone.layoutmanager"], ->
       done = @async()
       
       # Seek out the template asynchronously.
-      $.get app.root + path, (contents) ->
-        done JST[path] = _.template(contents)
-
-
+      $.get "#{app.root}#{path}.hbs", (contents) ->
+        done JST[path] = Handlebars.compile(contents)
+      
+      # return done
+    
+    # render: (template, context) ->
+    #   try
+    #       return template(context)
+    #   catch e
+    #       console.warn "error rendering: #{@template}"
+    #       console.error e
   
   # Mix Backbone.Events, modules, and layout management into the app object.
   _.extend app,
@@ -44,13 +51,35 @@ define ["backbone.layoutmanager"], ->
     
     # Helper for using layouts.
     useLayout: (options) ->
+      name = options.template
+      options.template = "layouts/#{options.template}"
+      # If already using this Layout, then don't re-inject into the DOM.
+      return @layout  if @layout and @layout.options.template is options.template
+      
+      # If a layout already exists, remove it from the DOM.
+      @layout.remove()  if @layout
       
       # Create a new Layout with options.
       layout = new Backbone.Layout(_.extend(
-        el: "body"
+        className: "layout #{name}"
+        id: "layout"
       , options))
       
+      # Render the layout and insert into the DOM.
+      layout.render().view.$el.appendTo('#main')
+      
       # Cache the refererence.
-      @layout = layout
+      return @layout = layout
+      
+      # Newwer implimentation that I don't like
+      
+      # Create a new Layout with options.
+      # layout = new Backbone.Layout(_.extend(
+      #         el: "body"
+      #       , options))
+      
+      # Cache the refererence.
+      # return @layout = layout
+      
   , Backbone.Events
 

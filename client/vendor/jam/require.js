@@ -2053,6 +2053,11 @@ var jam = {
             "main": "backbone.layoutmanager.js"
         },
         {
+            "name": "handlebars",
+            "location": "../vendor/jam/handlebars",
+            "main": "handlebars.js"
+        },
+        {
             "name": "jquery",
             "location": "../vendor/jam/jquery",
             "main": "jquery.js"

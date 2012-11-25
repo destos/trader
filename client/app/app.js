@@ -1,5 +1,5 @@
 
-define(["backbone.layoutmanager"], function() {
+define(["handlebars", "backbone.layoutmanager"], function(Handlebars) {
   var JST, app;
   app = {
     root: "/"
@@ -10,13 +10,12 @@ define(["backbone.layoutmanager"], function() {
     prefix: "app/templates/",
     fetch: function(path) {
       var done;
-      path = path + ".html";
       if (JST[path]) {
         return JST[path];
       }
       done = this.async();
-      return $.get(app.root + path, function(contents) {
-        return done(JST[path] = _.template(contents));
+      return $.get("" + app.root + path + ".hbs", function(contents) {
+        return done(JST[path] = Handlebars.compile(contents));
       });
     }
   });
@@ -27,10 +26,20 @@ define(["backbone.layoutmanager"], function() {
       }, additionalProps);
     },
     useLayout: function(options) {
-      var layout;
+      var layout, name;
+      name = options.template;
+      options.template = "layouts/" + options.template;
+      if (this.layout && this.layout.options.template === options.template) {
+        return this.layout;
+      }
+      if (this.layout) {
+        this.layout.remove();
+      }
       layout = new Backbone.Layout(_.extend({
-        el: "body"
+        className: "layout " + name,
+        id: "layout"
       }, options));
+      layout.render().view.$el.appendTo('#main');
       return this.layout = layout;
     }
   }, Backbone.Events);

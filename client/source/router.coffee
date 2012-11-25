@@ -2,7 +2,8 @@
 define [
   "app"
   "backbone.io"
-], (app, Backbone) ->
+  "modules/Location"
+], (app, Backbone, Location) ->
   
   # Defining the application router, you can attach sub routers here.
   Router = Backbone.Router.extend(
@@ -11,9 +12,19 @@ define [
     
     initialize: ->
       Backbone.io.connect()
+      app.locations = new Location.Collection()
       
     index: ->
-      console.log('got here');
+      locationGrid = new Location.Views.Grid
+        collection: app.locations
+        
+      app.useLayout
+        template: 'home'
+        
+      app.layout.setViews
+        '.grid': locationGrid
+      
+      app.locations.fetch()
   )
   
   return Router
